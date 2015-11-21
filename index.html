@@ -1,82 +1,70 @@
-<!DOCTYPE html>
-<html lang="en" ng-app="jsonTreeDemo">
-<head>
-  <meta charset="utf-8">
-  <title>JSON Tree</title>
-  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/normalize/3.0.1/normalize.min.css">
-  <link rel="stylesheet" href="https://rawgit.com/awendland/angular-json-tree/master/build/angular-json-tree.css" />
-  <link rel="stylesheet/less" type="text/css" href="styles.less" />
-  <script src="//cdnjs.cloudflare.com/ajax/libs/less.js/1.7.5/less.min.js"></script>
-</head>
-<body ng-controller="DemoCtrl">
-  <section id="input-controls">
-    <span class="json-file">
-      <label class="button" for="json-file-choose">Load File</label>
-      <input type="file" id="json-file-choose" fileread="json.string">
-    </span>
-  </section>
-  <section id="input" ng-class="{'error': error}">
-    <div class="error-modal" ng-show="error.show"><p class="info">{{error.message}}</p><button class="close" ng-click="error.show = false">Close</button></div>
-    <textarea ng-model="json.string"></textarea>
-  </section>
-  <section id="output">
-    <json-tree object="json.object" start-expanded="true"></json-tree>
-  </section>
-  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular.min.js"></script>
-  <script src="https://rawgit.com/awendland/angular-json-tree/master/build/angular-json-tree.min.js"></script>
-  <script type="text/javascript">
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta charset="utf-8">
+	</head>
+	<body>
+		<h3 id="label">Select Type Of Fee:</h3>
+		<select id="fee">
+			<option value="" disabled selected hidden>Make a Choice</option>
+		</select>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+		<script type="text/javascript">
+			$(document).ready(function() {
+					var feeObj;
 
+					$.get('https://api.myjson.com/bins/5alnl', function(data) {
+						feeObj = data;
+						for (var feeType in feeObj) {
+						$('#fee').append('<option value="'+ feeType +'">'+ feeType + '</option>');
+					}
+					});
 
-  //the angular js script starts here
-angular.module('jsonTreeDemo', ['angular-json-tree'])
-  .controller('DemoCtrl', ['$scope', '$http', function ($scope, $http) {
-    $scope.json = {};
-    $scope.json.string = "{}";
-    $scope.json.object = JSON.parse($scope.json.string);
-    $scope.$watch('json.string', function (newVal, oldVal) {
-      if (newVal !== oldVal) {
-        try {
-          $scope.error = null;
-          $scope.json.object = JSON.parse(newVal);
-        } catch (e) {
-          console.log(e);
-          $scope.error = {
-            message: e.message,
-            show: true
-          }
-        }
-      }
-    });
-    $scope.loadUrl = function () {
-      if ($scope.json.url) {
-        $scope.json.badUrl = false;
-        $http.get($scope.json.url).then(function (resp) {
-          $scope.json.string = JSON.stringgify(resp.data, null, 2);
-        }, function () {
-          $scope.json.badUrl = true;
-        });
-      }
-    };
-  }])
-  .directive("fileread", [function () {
-      return {
-          scope: {
-              fileread: "="
-          },
-          link: function (scope, element, attributes) {
-              element.bind("change", function (changeEvent) {
-                  var reader = new FileReader();
-                  reader.onload = function (loadEvent) {
-                      scope.$apply(function () {
-                          scope.fileread = loadEvent.target.result;
-                      });
-                  }
-                  reader.readAsText(changeEvent.target.files[0]);
-              });
-          }
-      }
-  }]);  
+					var level = 1;
+					var obj;
 
-  </script>
-  </body>
+					$( "#fee" ).change(function() {
+						var fee = $(this).val();
+						if(level == 1) {
+							$('#label').text("Select Nationality:");
+							$(this).html('<option value="" disabled selected hidden>Make a Choice</option>');
+							obj = feeObj[fee];
+  							for(var nationality in obj)
+  								$(this).append('<option value="'+ nationality +'">'+ nationality + '</option>');
+  						}
+  						else if(level == 2) {
+  							$('#label').text("Select Course:");
+							$(this).html('<option value="" disabled selected hidden>Make a Choice</option>');
+							obj = obj[fee];
+							for(var course in obj) {
+  								$(this).append('<option value="'+ course +'">Medical</option>');
+  								$(this).append('<option value="'+ course +'">Dental</option>');
+  								$(this).append('<option value="'+ course +'">Ayurveda</option>');
+  							}	
+  						}
+  						else if(level == 3) {
+  							$('#label').text("Select Level:");
+							$('#fee').html('<option value="" disabled selected hidden>Make a Choice</option>');
+							obj = obj[fee];
+  							for(var c_level in obj) {
+  								if(c_level === " ALL_LEVEL ") {
+  									$('#fee').append('<option value="'+ c_level +'">UG</option>');
+  									$('#fee').append('<option value="'+ c_level +'">PG</option>');
+  									$('#fee').append('<option value="'+ c_level +'">DIPLOMA</option>');
+  									$('#fee').append('<option value="'+ c_level +'">Ph.D</option>');
+  								}
+  								else
+  									$('#fee').append('<option value="'+ c_level +'">'+ c_level + '</option>');
+  							}
+  						}
+  						else if(level == 4) {
+  							$('#label').text("Amount:");
+  							$('#fee').remove();
+  							$('body').append("<h4>Rs. "+ obj[fee].amount + "</h4>");
+  						}
+  						level++;
+					});
+			});
+		</script>
+	</body>
 </html>
