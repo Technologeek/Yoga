@@ -1,18 +1,13 @@
 # Yoga
 This  a solution for the Programming question asked of Yo2Yoga Interview.
-I have implemented the solution using Angular.js  and added some style using less.
+I have implemented the solution using Jquery.
 
 Here's how you can view the demo :
-First off, we need a Json file containing the structure of objects and data .Download the Json file here :
+First off, we need a Json file containing the structure of objects and data .In this case I have uploaded my Json file at a free Json file server hosting at  <b><h3>https://api.myjson.com/bins/5alnl</h3></b>  from where I'm parsing the data
 
-<b><h3>This will take you to a third party website for the Json file download</h3></b>
-
-
-<a href=http://www.filedropper.com/yo2><img src=http://www.filedropper.com/download_button.png width=127 height=145 border=0/></a><br /><div style=font-size:9px;font-family:Arial, Helvetica, sans-serif;width:127px;font-color:#44a854;></div>
 
 Open the website here:
 http://technologeek.github.io/Yoga/index.html
 
-Click on Load file and Navigiate to the downloaded Json File saved on your local disk, once the file is opened,on the left side text-area you can see the Json file contents and on the right side the required solution in a tree structure.
-
+Basically just select the options from the given checklist, I haven't really added any css in this as its basic yet functional and does the job.
 
